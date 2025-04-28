@@ -39,7 +39,8 @@ def make_network(filename, controller_ip, controller_port):
         ip2router[r["ip"]] = router
         ip2hosts [r["ip"]] = []
         for h in r["hosts"]:
-            ip = f"{h["ip"]}/{subnet}"
+            hip = h["ip"]
+            ip = f"{hip}/{subnet}"
             host = net.addHost(h["name"], ip=ip, mac=h["mac"])
             net.addLink(router, host)
             ip2hosts[r["ip"]].append(host)
@@ -59,7 +60,8 @@ def make_network(filename, controller_ip, controller_port):
     ## Step 5: Setup default routes for hosts
     for r_ip, hosts in ip2hosts.items():
         for h in hosts:
-            h.cmd(f"route add default gw {r_ip.split("/")[0]}")
+            gw = r_ip.split("/")[0]
+            h.cmd(f"route add default gw {gw}")
     
     ## Step 6: Run command line interface until it's closed
     CLI(net)
